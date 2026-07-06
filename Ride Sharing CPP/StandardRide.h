@@ -1,51 +1,15 @@
+#ifndef STANDARDRIDE_H
+#define STANDARDRIDE_H
+
 #include "Ride.h"
-#include <iostream>
-#include <iomanip>
 
-using namespace std;
-
-Ride::Ride(int id, string pickup, string dropoff, double dist)
+class StandardRide : public Ride
 {
-    rideID = id;
-    pickupLocation = pickup;
-    dropoffLocation = dropoff;
-    distance = dist;
-    fare = 0.0;
-}
+public:
+    StandardRide(int id, string pickup, string dropoff, double dist);
 
-Ride::~Ride() {}
+    double calculateFare() override;
+    void rideDetails() override;
+};
 
-int Ride::getRideID() const
-{
-    return rideID;
-}
-
-double Ride::getDistance() const
-{
-    return distance;
-}
-
-void Ride::setFare(double newFare)
-{
-    fare = newFare;
-}
-
-double Ride::getFare() const
-{
-    return fare;
-}
-
-double Ride::calculateFare()
-{
-    fare = distance * 2.0;
-    return fare;
-}
-
-void Ride::rideDetails()
-{
-    cout << "Ride ID: " << rideID << endl;
-    cout << "Pickup: " << pickupLocation << endl;
-    cout << "Dropoff: " << dropoffLocation << endl;
-    cout << "Distance: " << distance << " miles" << endl;
-    cout << "Fare: $" << fixed << setprecision(2) << fare << endl;
-}
+#endif
