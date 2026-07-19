@@ -37,7 +37,7 @@ The application models a ride-sharing platform where riders can request rides, d
 
 ---
 
-## Project Structure
+## Project Structure for C++
 
 ```
 RideSharingSystem/
