@@ -59,9 +59,3 @@ The project source code is provided as a **Pharo FileOut** (`RideSharingSystem.s
 - **Programming Paradigm:** Object-Oriented Programming
 
 ---
-
-## References
-
-1. Goldberg A, Robson D. *Smalltalk-80: The Language and Its Implementation*. Reading (MA): Addison-Wesley; 1983.
-
-2. Ducasse S, Chloupis G. *Pharo by Example*. Lille (France): Square Bracket Associates; 2022.
