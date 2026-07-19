@@ -1,94 +1,117 @@
-# Ride Sharing System
+# Assignment 5 – Ride Sharing System
 
 ## Overview
 
-This project is a simple object-oriented Ride Sharing System developed in **C++**. It demonstrates the core principles of Object-Oriented Programming (OOP), including **Encapsulation**, **Inheritance**, and **Polymorphism**.
+This repository contains two implementations of a **Ride Sharing System** developed as part of an Object-Oriented Programming assignment. The project demonstrates the fundamental principles of object-oriented programming (OOP) by implementing the same system in two different programming languages:
 
-The application models a ride-sharing platform where riders can request rides, drivers can complete rides, and different ride types calculate fares differently.
+- **C++**
+- **Smalltalk (Pharo)**
 
----
-
-## Features
-
-- Base `Ride` class containing ride information
-- `StandardRide` and `PremiumRide` subclasses with different fare calculations
-- `Driver` class to manage completed rides
-- `Rider` class to manage requested rides
-- Polymorphic fare calculation using a collection of `Ride` objects
-- Console-based demonstration of the system
+The objective is to compare how object-oriented concepts are implemented across different languages while maintaining the same system functionality.
 
 ---
 
-## Object-Oriented Principles Demonstrated
+## Project Objectives
 
-### Encapsulation
-- Class data members are declared as `private`.
-- Public getter and setter methods provide controlled access to class data.
-- The `Driver` and `Rider` classes manage ride collections through public methods.
+The Ride Sharing System demonstrates the following OOP principles:
 
-### Inheritance
-- `StandardRide` and `PremiumRide` inherit from the base `Ride` class.
-- Derived classes reuse common ride properties while implementing their own fare calculations.
+- **Encapsulation** – Protecting object data through controlled access.
+- **Inheritance** – Reusing common functionality through class hierarchies.
+- **Polymorphism** – Allowing different ride types to respond differently to the same message or method call.
 
-### Polymorphism
-- The `calculateFare()` and `rideDetails()` methods are declared `virtual` in the `Ride` class.
-- Both derived classes override these methods.
-- A collection of `Ride` pointers is used to invoke overridden methods dynamically.
+The system models a simplified ride-sharing application that manages rides, drivers, and riders while calculating fares based on ride type.
 
 ---
 
-## Project Structure for C++
+## Repository Structure
 
 ```
-RideSharingSystem/
+Assignment-5
 │
-├── Driver.cpp
-├── Driver.h
-├── PremiumRide.cpp
-├── PremiumRide.h
-├── Ride.cpp
-├── Ride.h
-├── Rider.cpp
-├── Rider.h
-├── StandardRide.cpp
-├── StandardRide.h
-├── main.cpp
+├── Ride Sharing CPP
+│   ├── Source Code
+│   ├── README.md
+│   └── Documentation
+│
+├── Ride Sharing Smalltalk
+│   ├── RideSharingSystem.st
+│   ├── README.md
+│   └── Documentation
+│
 └── README.md
 ```
 
 ---
 
-## How to Build and Run
+## System Components
 
-### Using Visual Studio
+Both implementations include the following classes:
 
-1. Open the solution in Visual Studio.
-2. Build the project (**Build → Build Solution**).
-3. Run the application using **Ctrl + F5**.
+- **Ride** (Base Class)
+- **StandardRide**
+- **PremiumRide**
+- **Driver**
+- **Rider**
 
-### Using g++
+### Features
 
-```bash
-g++ *.cpp -o RideSharingSystem
-./RideSharingSystem
-```
+- Create standard and premium rides
+- Calculate ride fares
+- Display ride information
+- Assign rides to drivers
+- Request rides from riders
+- Demonstrate runtime polymorphism
 
 ---
 
-## Sample Output
+## Language Implementations
 
-The application demonstrates:
+### C++
 
-- Creation of different ride types
-- Fare calculation for each ride
-- Rider ride history
-- Driver completed rides
-- Polymorphic method invocation
+The C++ implementation uses:
+
+- Classes and objects
+- Private data members with public getters/setters
+- Virtual functions
+- Inheritance
+- Runtime polymorphism using `shared_ptr<Ride>` stored in a `vector`
+
+---
+
+### Smalltalk (Pharo)
+
+The Smalltalk implementation uses:
+
+- Classes and message passing
+- Instance variables with accessor methods
+- Inheritance through subclassing
+- Method overriding
+- Runtime polymorphism using an `OrderedCollection` of `Ride` objects
+
+---
+
+## Development Environments
+
+| Language | Environment |
+|----------|-------------|
+| C++ | Microsoft Visual Studio 2022 |
+| Smalltalk | Pharo 14 |
+
+---
+
+## Documentation
+
+Each implementation contains its own documentation explaining:
+
+- System design
+- Object-oriented programming concepts
+- Code implementation
+- Testing and execution
+
+Detailed screenshots and execution results are included in the submitted project report.
 
 ---
 
 ## Author
 
 **Priya Thapa**
-
-MS Computer Science
