@@ -1,335 +1,1 @@
-'Ride Sharing System - Pharo Smalltalk implementation'
-'File this code into Pharo using Tools > File Browser, or paste the class and method definitions into the System Browser.'
-
-Object subclass: #Ride
-    instanceVariableNames: 'rideID pickupLocation dropoffLocation distance fare'
-    classVariableNames: ''
-    package: 'RideSharingSystem'!
-
-Ride subclass: #StandardRide
-    instanceVariableNames: ''
-    classVariableNames: ''
-    package: 'RideSharingSystem'!
-
-Ride subclass: #PremiumRide
-    instanceVariableNames: ''
-    classVariableNames: ''
-    package: 'RideSharingSystem'!
-
-Object subclass: #Driver
-    instanceVariableNames: 'driverID name rating assignedRides'
-    classVariableNames: ''
-    package: 'RideSharingSystem'!
-
-Object subclass: #Rider
-    instanceVariableNames: 'riderID name requestedRides'
-    classVariableNames: ''
-    package: 'RideSharingSystem'!
-
-
-!Ride class methodsFor: 'instance creation'!
-rideID: anID pickup: aPickupLocation dropoff: aDropoffLocation distance: aDistance
-    ^ self new
-        rideID: anID;
-        pickupLocation: aPickupLocation;
-        dropoffLocation: aDropoffLocation;
-        distance: aDistance;
-        yourself
-!
-
-
-!Ride methodsFor: 'initialization'!
-initialize
-    super initialize.
-    rideID := 0.
-    pickupLocation := ''.
-    dropoffLocation := ''.
-    distance := 0.
-    fare := 0
-!
-
-
-!Ride methodsFor: 'accessing'!
-rideID
-    ^ rideID
-!
-
-rideID: anID
-    rideID := anID
-!
-
-pickupLocation
-    ^ pickupLocation
-!
-
-pickupLocation: aLocation
-    pickupLocation := aLocation
-!
-
-dropoffLocation
-    ^ dropoffLocation
-!
-
-dropoffLocation: aLocation
-    dropoffLocation := aLocation
-!
-
-distance
-    ^ distance
-!
-
-distance: aDistance
-    aDistance < 0
-        ifTrue: [ self error: 'Distance cannot be negative' ].
-    distance := aDistance
-!
-
-fare
-    ^ fare
-!
-
-
-!Ride methodsFor: 'calculating'!
-calculateFare
-    self subclassResponsibility
-!
-
-
-!Ride methodsFor: 'displaying'!
-rideDetails
-    self calculateFare.
-
-    ^ String streamContents: [ :stream |
-        stream
-            nextPutAll: 'Ride ID: ';
-            nextPutAll: rideID asString;
-            cr;
-            nextPutAll: 'Ride Type: ';
-            nextPutAll: self class name;
-            cr;
-            nextPutAll: 'Pickup Location: ';
-            nextPutAll: pickupLocation;
-            cr;
-            nextPutAll: 'Drop-off Location: ';
-            nextPutAll: dropoffLocation;
-            cr;
-            nextPutAll: 'Distance: ';
-            nextPutAll: distance asString;
-            nextPutAll: ' miles';
-            cr;
-            nextPutAll: 'Fare: $';
-            nextPutAll: fare asString ]
-!
-
-
-!StandardRide methodsFor: 'calculating'!
-calculateFare
-    fare := 2.00 + (distance * 1.50).
-    ^ fare
-!
-
-
-!PremiumRide methodsFor: 'calculating'!
-calculateFare
-    fare := 5.00 + (distance * 3.00) + 4.00.
-    ^ fare
-!
-
-
-!Driver class methodsFor: 'instance creation'!
-driverID: anID name: aName rating: aRating
-    ^ self new
-        driverID: anID;
-        name: aName;
-        rating: aRating;
-        yourself
-!
-
-
-!Driver methodsFor: 'initialization'!
-initialize
-    super initialize.
-    driverID := 0.
-    name := ''.
-    rating := 0.
-    assignedRides := OrderedCollection new
-!
-
-
-!Driver methodsFor: 'accessing'!
-driverID
-    ^ driverID
-!
-
-driverID: anID
-    driverID := anID
-!
-
-name
-    ^ name
-!
-
-name: aName
-    name := aName
-!
-
-rating
-    ^ rating
-!
-
-rating: aRating
-    (aRating < 0 or: [ aRating > 5 ])
-        ifTrue: [ self error: 'Rating must be between 0 and 5' ].
-    rating := aRating
-!
-
-assignedRides
-    ^ assignedRides copy
-!
-
-
-!Driver methodsFor: 'ride management'!
-addRide: aRide
-    (aRide isKindOf: Ride)
-        ifFalse: [ self error: 'Only Ride objects can be assigned to a driver' ].
-    assignedRides add: aRide
-!
-
-numberOfCompletedRides
-    ^ assignedRides size
-!
-
-totalEarnings
-    ^ assignedRides
-        inject: 0
-        into: [ :total :eachRide | total + eachRide calculateFare ]
-!
-
-
-!Driver methodsFor: 'displaying'!
-getDriverInfo
-    ^ String streamContents: [ :stream |
-        stream
-            nextPutAll: 'Driver ID: ';
-            nextPutAll: driverID asString;
-            cr;
-            nextPutAll: 'Driver Name: ';
-            nextPutAll: name;
-            cr;
-            nextPutAll: 'Rating: ';
-            nextPutAll: rating asString;
-            cr;
-            nextPutAll: 'Completed Rides: ';
-            nextPutAll: assignedRides size asString;
-            cr;
-            nextPutAll: 'Total Earnings: $';
-            nextPutAll: self totalEarnings asString ]
-!
-
-viewAssignedRides
-    assignedRides isEmpty
-        ifTrue: [ ^ 'No rides have been assigned to this driver.' ].
-
-    ^ String streamContents: [ :stream |
-        assignedRides doWithIndex: [ :eachRide :index |
-            stream
-                nextPutAll: 'Assigned Ride ';
-                nextPutAll: index asString;
-                cr;
-                nextPutAll: eachRide rideDetails;
-                cr;
-                nextPutAll: '------------------------------';
-                cr ] ]
-!
-
-
-!Rider class methodsFor: 'instance creation'!
-riderID: anID name: aName
-    ^ self new
-        riderID: anID;
-        name: aName;
-        yourself
-!
-
-
-!Rider methodsFor: 'initialization'!
-initialize
-    super initialize.
-    riderID := 0.
-    name := ''.
-    requestedRides := OrderedCollection new
-!
-
-
-!Rider methodsFor: 'accessing'!
-riderID
-    ^ riderID
-!
-
-riderID: anID
-    riderID := anID
-!
-
-name
-    ^ name
-!
-
-name: aName
-    name := aName
-!
-
-requestedRides
-    ^ requestedRides copy
-!
-
-
-!Rider methodsFor: 'ride management'!
-requestRide: aRide
-    (aRide isKindOf: Ride)
-        ifFalse: [ self error: 'Only Ride objects can be requested' ].
-    requestedRides add: aRide
-!
-
-numberOfRequestedRides
-    ^ requestedRides size
-!
-
-totalAmountSpent
-    ^ requestedRides
-        inject: 0
-        into: [ :total :eachRide | total + eachRide calculateFare ]
-!
-
-
-!Rider methodsFor: 'displaying'!
-getRiderInfo
-    ^ String streamContents: [ :stream |
-        stream
-            nextPutAll: 'Rider ID: ';
-            nextPutAll: riderID asString;
-            cr;
-            nextPutAll: 'Rider Name: ';
-            nextPutAll: name;
-            cr;
-            nextPutAll: 'Requested Rides: ';
-            nextPutAll: requestedRides size asString;
-            cr;
-            nextPutAll: 'Total Amount Spent: $';
-            nextPutAll: self totalAmountSpent asString ]
-!
-
-viewRides
-    requestedRides isEmpty
-        ifTrue: [ ^ 'This rider has not requested any rides.' ].
-
-    ^ String streamContents: [ :stream |
-        requestedRides doWithIndex: [ :eachRide :index |
-            stream
-                nextPutAll: 'Requested Ride ';
-                nextPutAll: index asString;
-                cr;
-                nextPutAll: eachRide rideDetails;
-                cr;
-                nextPutAll: '------------------------------';
-                cr ] ]
-!
+"VERSION:1.0"!Object subclass: #Driver	instanceVariableNames: 'driverID name rating assignedRides'	classVariableNames: ''	package: 'RideSharingSystem'!Driver class	instanceVariableNames: ''!Object subclass: #Rider	instanceVariableNames: 'riderID name requestedRides'	classVariableNames: ''	package: 'RideSharingSystem'!Rider class	instanceVariableNames: ''!Object subclass: #Ride	instanceVariableNames: 'rideID pickupLocation dropoffLocation distance fare'	classVariableNames: ''	package: 'RideSharingSystem'!Ride class	instanceVariableNames: ''!Ride subclass: #StandardRide	instanceVariableNames: ''	classVariableNames: ''	package: 'RideSharingSystem'!StandardRide class	instanceVariableNames: ''!Ride subclass: #PremiumRide	instanceVariableNames: ''	classVariableNames: ''	package: 'RideSharingSystem'!PremiumRide class	instanceVariableNames: ''!!Driver methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.792-05:00' prior: 0!assignRide: aRide    assignedRides add: aRide! !!Driver methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.798-05:00' prior: 0!assignedRides    ^ assignedRides! !!Driver methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.804-05:00' prior: 0!driverDetails    ^ String streamContents: [ :stream |        stream            nextPutAll: 'Driver ID: '; nextPutAll: driverID asString; cr;            nextPutAll: 'Name: '; nextPutAll: name; cr;            nextPutAll: 'Rating: '; nextPutAll: rating asString; cr;            nextPutAll: 'Assigned Rides: ';            nextPutAll: assignedRides size asString ]! !!Driver methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.809-05:00' prior: 0!driverID: anID name: aName rating: aRating    driverID := anID.    name := aName.    rating := aRating.    assignedRides := OrderedCollection new! !!Driver methodsFor: 'initialization' stamp: '2026-07-18T19:51:55.814-05:00' prior: 0!initialize    super initialize.    driverID := 0.    name := ''.    rating := 0.    assignedRides := OrderedCollection new! !!PremiumRide methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.818-05:00' prior: 0!calculateFare    fare := (distance * 3) + 10.    ^ fare! !!PremiumRide methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.821-05:00' prior: 0!rideDetails    ^ super rideDetails ,        String cr ,        'Ride Type: Premium'! !!Ride methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.827-05:00' prior: 0!calculateFare    self subclassResponsibility! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.831-05:00' prior: 0!distance    ^ distance! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.837-05:00' prior: 0!distance: aDistance    distance := aDistance! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.841-05:00' prior: 0!dropoffLocation    ^ dropoffLocation! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.845-05:00' prior: 0!dropoffLocation: aLocation    dropoffLocation := aLocation! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.849-05:00' prior: 0!fare    ^ fare! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.853-05:00' prior: 0!fare: aFare    fare := aFare! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.858-05:00' prior: 0!initialize    super initialize.    rideID := 0.    pickupLocation := ''.    dropoffLocation := ''.    distance := 0.    fare := 0! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.863-05:00' prior: 0!pickupLocation    ^ pickupLocation! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.868-05:00' prior: 0!pickupLocation: aLocation    pickupLocation := aLocation! !!Ride methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.871-05:00' prior: 0!rideDetails    ^ String streamContents: [ :stream |        stream            nextPutAll: 'Ride ID: '; nextPutAll: rideID asString; cr;            nextPutAll: 'Pickup: '; nextPutAll: pickupLocation; cr;            nextPutAll: 'Dropoff: '; nextPutAll: dropoffLocation; cr;            nextPutAll: 'Distance: '; nextPutAll: distance asString; cr;            nextPutAll: 'Fare: $'; nextPutAll: fare asString ]! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.877-05:00' prior: 0!rideID    ^ rideID! !!Ride methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.881-05:00' prior: 0!rideID: anID    rideID := anID! !!Ride methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.886-05:00' prior: 0!rideID: anID pickup: aPickup dropoff: aDropoff distance: aDistance    rideID := anID.    pickupLocation := aPickup.    dropoffLocation := aDropoff.    distance := aDistance.    fare := 0! !!Rider methodsFor: 'initialization' stamp: '2026-07-18T19:51:55.89-05:00' prior: 0!initialize    super initialize.    riderID := 0.    name := ''.    requestedRides := OrderedCollection new! !!Rider methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.894-05:00' prior: 0!requestRide: aRide    requestedRides add: aRide! !!Rider methodsFor: 'accessing' stamp: '2026-07-18T19:51:55.9-05:00' prior: 0!requestedRides    ^ requestedRides! !!Rider methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.904-05:00' prior: 0!riderDetails    ^ String streamContents: [ :stream |        stream            nextPutAll: 'Rider ID: '; nextPutAll: riderID asString; cr;            nextPutAll: 'Name: '; nextPutAll: name; cr;            nextPutAll: 'Requested Rides: ';            nextPutAll: requestedRides size asString ]! !!Rider methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.908-05:00' prior: 0!riderID: anID name: aName    riderID := anID.    name := aName.    requestedRides := OrderedCollection new! !!StandardRide methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.912-05:00' prior: 0!calculateFare    fare := distance * 2.    ^ fare! !!StandardRide methodsFor: 'as yet unclassified' stamp: '2026-07-18T19:51:55.917-05:00' prior: 0!rideDetails    ^ super rideDetails ,        String cr ,        'Ride Type: Standard'! !Driver initialize!Rider initialize!Ride initialize!
