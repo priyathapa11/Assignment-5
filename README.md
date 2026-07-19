@@ -27,11 +27,21 @@ The system models a simplified ride-sharing application that manages rides, driv
 
 ```
 Assignment-5
+|
+Ride Sharing CPP/
 │
-├── Ride Sharing CPP
-│   ├── Source Code
-│   ├── README.md
-│   └── Documentation
+├── Driver.cpp
+├── Driver.h
+├── PremiumRide.cpp
+├── PremiumRide.h
+├── Ride.cpp
+├── Ride.h
+├── Rider.cpp
+├── Rider.h
+├── StandardRide.cpp
+├── StandardRide.h
+├── main.cpp
+└── README.md
 │
 ├── Ride Sharing Smalltalk
 │   ├── RideSharingSystem.st
